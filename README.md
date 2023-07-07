@@ -15,7 +15,7 @@ This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&
   * #### If you don't know the sequencing adaptor 
 * ### modify the job submission file (wrapper file)
 * ### change directory to the folder that contains your job file and job submission file, type in ``` chmod +x * ```
-## Broad peak calling
+## Broad peak calling 
 
 
 
