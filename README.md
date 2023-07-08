@@ -1,11 +1,15 @@
 # Table of contents <br>
  - [Introduction](#introduction)
+ - [Demo data](#demo_data)
  - [Analysis workflow](#analysis_workflow)
  - [Step by step analysis](#Step_by_step_analysis)
  - [Broad peakcalling](#broad_peakcalling)
 
 ## Introduction <br>
 This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&RUN. In my experience, I found you can generally use the same analysis workflow for the two types of experiment, but there are studies proposing tailored CUT&RUN analysis tools such as [SEACR](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-019-0287-4), you are welcome to experimening orthogonal approaches and becnchmark their performance. 
+
+## Demo data
+I will be using an example data set to illustrate this workflow. This is a CUT&RUN experiment on human CD34+ HSPC, probing for SMARCA4 binding with and without knocking out CUX1 using CRISPR/Cas9. The metadata is whown below:
 
 ## Analysis workflow
 ![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_chart.png)
