@@ -23,7 +23,7 @@ This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&
 * ### (optional) Run fastqcr again to ensure the adaptors are successfully removed
   
 * ### set up your working directory. (the demo example folder names are written in parenthesis)
-  1. #### create your project folder. (SMARCA4_ChIP)
+  1. #### create your project folder. <SMARCA4_ChIP>
   2. #### create four sub-folders underneath your project folder
      * ##### </SMARCA4_ChIP/input> trimmed fastqs
      * ##### </SMARCA4_ChIP/output> the analysis output
