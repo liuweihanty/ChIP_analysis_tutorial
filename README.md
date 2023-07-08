@@ -12,7 +12,8 @@ This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&
 
 ## Step by step analysis
 * ### Run fastqc
-  You can do this in either linux or R. The fastqcr code is attached in this folder. Please see inside for details.
+  You can do this in either linux or R. [fastqcr](http://www.sthda.com/english/wiki/fastqcr-an-r-package-facilitating-quality-controls-of-sequencing-data-for-large-numbers-of-samples) package provided an easy implementation in R language. You can run this in your local desktop. The fastqcr code is attached in this folder. Please see inside for details.
+  
 * ### Remove illumina library adaptor.
    You will obtain sequencing adaptor sequence from the sequencing facility. If not, you can run the fastqc and in the last section "adaptpor sequence" you will see it. Typical Illumina library sequencing adaptor sequences could be seen [here](https://knowledge.illumina.com/library-preparation/general/library-preparation-general-reference_material-list/000001314)
 * ### set up your working directory
