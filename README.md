@@ -9,7 +9,7 @@
 This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&RUN. In my experience, I found you can generally use the same analysis workflow for the two types of experiment, but there are studies proposing tailored CUT&RUN analysis tools such as [SEACR](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-019-0287-4), you are welcome to experimening orthogonal approaches and becnchmark their performance. 
 
 ## Demo data
-I will be using an example data set to illustrate this workflow. This is a CUT&RUN experiment on human CD34+ HSPC, probing for SMARCA4 binding with and without knocking out CUX1 using CRISPR/Cas9. The metadata is whown below:
+I will be using an example data set to illustrate this workflow. This is a CUT&RUN experiment on human CD34+ HSPC, probing for CUX1 and SMARCA4 binding. Each TF has two replicates. 
 
 ## Analysis workflow
 ![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_chart.png)
@@ -27,14 +27,14 @@ I will be using an example data set to illustrate this workflow. This is a CUT&R
 * ### (Optional) Run fastqcr again to ensure the adaptors are successfully removed
   
 * ### Set up your working directory. (the demo example folder names are written in parenthesis)
-  * create your project folder. **/SMARCA4_CnR/**
+  * create your project folder. **/CD34_CUX1_CnR/**
   * create four sub-folders underneath your project folder
-     * **/SMARCA4_CnR/input** $~~~$ trimmed fastqs
-     * **/SMARCA4_CnR/output** $~~~$ the analysis output
-         * **/SMARCA4_CnR/output/bwa** $~~~$ alignment output
-         * **/SMARCA4_CnR/output/macs2** $~~~$ peak callint output
-     * **/SMARCA4_CnR/logs** $~~~$ the error and output records files for debugging
-     * **/SMARCA4_CnR/scripts** $~~~$ the analysis scripts
+     * **/CD34_CUX1_CnR/input** $~~~$ trimmed fastqs
+     * **/CD34_CUX1_CnR/output** $~~~$ the analysis output
+         * **/CD34_CUX1_CnR/output/bwa** $~~~$ alignment output
+         * **/CD34_CUX1_CnR/output/macs2** $~~~$ peak callint output
+     * **/CD34_CUX1_CnR/logs** $~~~$ the error and output records files for debugging
+     * **/CD34_CUX1_CnR/scripts** $~~~$ the analysis scripts
            
 * ### Run the job
      Now that we have the adaptor trimmed fastqs, it's time to proceeed to next steps. In the flow chart above, we finished steps 1 and 2 so far. Step 3 to 6 will be implemented in an automated workflow, which is organized into two bash scripts: <br>
