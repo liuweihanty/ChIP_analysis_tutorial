@@ -91,9 +91,11 @@ reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br>
     *normalized mean bigwig file across the two replicates <br>
     *MACS2 called peaks in narrowpeak format <br>
 
-    Note: <br>
+    **You don't need to modify anything for this script** <br>
+
+    **Note:** <br>
     *This tutorial uses p=0.1 for MACS2 peak calling, this is because the downstream [IDR](https://github.com/nboley/idr) workflow requires a loose significance threshold. IDR find consensus peaks across two biological replicates. It's best to use IDR if you have replicates. If you just have one rep (eg for a pilot study), since you are not using IDR in this case, you can set q=0.1 etc for MACS2 for an actual robust significance threshold.<br>
-    ***You don't need to modify anything for this script** <br>
+    
   
 * ### Run the job
     *change directory to the scripts folder that contains your job_submission.sh and run_job.sh file, type in ``` chmod +x * ```, this give execution rights to your scripts <br>
