@@ -9,7 +9,15 @@
 This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&RUN. In my experience, I found you can generally use the same analysis workflow for the two types of experiment, but there are studies proposing tailored CUT&RUN analysis tools such as [SEACR](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-019-0287-4), you are welcome to experimening orthogonal approaches and becnchmark their performance. 
 
 ## Demo data
-I will be using an example data set to illustrate this workflow. This is a CUT&RUN experiment on human CD34+ HSPC, probing for CUX1 and SMARCA4 binding. Each TF has two replicates. 
+I will be using an example data set to illustrate this workflow. This is a paired-end CUT&RUN experiment on human CD34+ HSPC, probing for CUX1 binding. There are two replicates. There is no input control as CUT&RUN doesn't require it. If you are doing ChIP-seq and there is an input control, the only difference in analysis will be at the peak calling step, which I will explain as we get there. <br>
+
+rep1 <br>
+forward: McN-JK-6S-JK1_S1_R1_001_trimmed.fastq.gz <br> 
+reverse: McN-JK-6S-JK1_S1_R2_001_trimmed.fastq.gz <br> 
+
+rep2 <br>
+forward: McN-JK-6S-JK2_S2_R1_001.fastq_trimmed.gz <br> 
+reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br> 
 
 ## Analysis workflow
 ![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_chart.png)
