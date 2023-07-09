@@ -39,8 +39,6 @@ reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br>
   * create four sub-folders underneath your project folder
      * **/CD34_CUX1_CnR/input** $~~~$ trimmed fastqs
      * **/CD34_CUX1_CnR/output** $~~~$ the analysis output
-         * **/CD34_CUX1_CnR/output/bwa** $~~~$ alignment output
-         * **/CD34_CUX1_CnR/output/macs2** $~~~$ peak callint output
      * **/CD34_CUX1_CnR/logs** $~~~$ the error and output records files for debugging
      * **/CD34_CUX1_CnR/scripts** $~~~$ the analysis scripts
            
