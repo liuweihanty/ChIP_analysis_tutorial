@@ -12,12 +12,12 @@ This tutorial walks step-by-step tutorial of analysis pipeline for ChIP-seq/CUT&
 I will be using an example data set to illustrate this workflow. This is a paired-end CUT&RUN experiment on human CD34+ HSPC, probing for CUX1 binding. There are two replicates. There is no input control as CUT&RUN doesn't require it. If you are doing ChIP-seq and there is an input control, the only difference in analysis will be at the peak calling step, which I will explain as we get there, you can keep following along this tutorial <br>
 
 rep1 <br>
-forward: McN-JK-6S-JK1_S1_R1_001_trimmed.fastq.gz <br> 
-reverse: McN-JK-6S-JK1_S1_R2_001_trimmed.fastq.gz <br> 
+forward: MMcN-DA-16S-DA-1_S13_L002_R1_001.fastq.gz <br> 
+reverse: MMcN-DA-16S-DA-1_S13_L002_R2_001.fastq.gz <br> 
 
 rep2 <br>
-forward: McN-JK-6S-JK2_S2_R1_001.fastq_trimmed.gz <br> 
-reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br> 
+forward: MMcN-DA-16S-DA-3_S15_L002_R1_001.fastq.gz <br> 
+reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br> 
 
 ## Analysis workflow
 ![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_chart.png)
@@ -41,6 +41,9 @@ reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br>
      * **/CD34_CUX1_CnR/output** $~~~$ the analysis output
      * **/CD34_CUX1_CnR/logs** $~~~$ the error and output records files for debugging
      * **/CD34_CUX1_CnR/scripts** $~~~$ the analysis scripts
+  Your working directory should look like this by now:
+     <img src="https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/7064d2d19c974fa2adacc081f888f956b49ce070/figures/working_directory_before_run.png" alt="repo_demo" width="350" height="200">
+
            
 * ### Set up the job running scripts
      Now that we have the adaptor trimmed fastqs, it's time to proceeed to next steps. In the flow chart above, we finished steps 1 and 2 so far. Step 3 to 6 will be implemented in an automated workflow, which is organized into two bash scripts: <br>
@@ -98,9 +101,35 @@ reverse: McN-JK-6S-JK2_S2_R2_001.fastq_trimmed.gz <br>
 * ### Run the job
     *change directory to the scripts folder that contains your job_submission.sh and run_job.sh file, type in ``` chmod +x * ```, this give execution rights to your scripts <br>
     * type in ```./job_submission.sh``` and the job should start to run
+    * **Important**: Within the job_submission.sh file in the last line,  you have the choice of specifying whether to run macs2 peak calling step. There are three mandatory flags in the qsub command:
+        * -macs2: whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
+        * -p: p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
+        * -q: q value for macs2. If you are not running IDR (eg you just have one rep), use this adjusted p value for macs2 instead. Only specify either p or q, not both!
 
-* ### IDR analysis
 
+* ### IDR analysis (If you chose to run macs2)
+    * After the program finishes run, go to the macs2 result folder <project_folder/output/macs2>, and download the narrowPeak files to your computer. These files are extended bed files that contain each called peak as a row, with additional columns(etc. significance, binding intensity). At this stage, you can change the narrowPeak file name to something that makes sense to you.
+    * If you don't have IDR installed, install it on your local computer [Instructions here](https://github.com/nboley/idr)
+    * Now let's run IDR
+      ```
+      ##Sort your narrowPeak files by the -log10(p-value) column
+      sort -k8,8nr CD34_CUX1_CnR_rep1.narrowPeak > CD34_CUX1_CnR_rep1.sorted.narrowPeak
+      sort -k8,8nr CD34_CUX1_CnR_rep2.narrowPeak > CD34_CUX1_CnR_rep2.sorted.narrowPeak
+      ##run idr
+      idr --samples CD34_CUX1_CnR_rep1.sorted.narrowPeak CD34_CUX1_CnR_rep2.sorted.narrowPeak \
+          --input-file-type narrowPeak \
+          --rank p.value \
+          --output-file CD34_CUX1_CnR_idr \
+          --plot \
+          --log-output-file CD34_CUX1_CnR.idr.log
+     * The output file CD34_CUX1_CnR.idr contains the consensus peaks across the two replicates. For a detailed explanantion of what columns are inside, please see [HBC training](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/07_handling-replicates-idr.html). What we care about here is column 5, which contains the scaled IDR value = -125*log2(IDR) For example, peaks with an IDR of 0.1 have a score of 415, peaks with an IDR of 0.05 have a score of int(-125log2(0.05)) = 540.
+     * Use this command to filter out peaks with IDR < 0.05 and compile to a bed file
+       ``` awk '{if($5 >= 540) print $0}' CD34_CUX1_CnR_idr > CD34_CUX1_CnR_idr_005.bed ```
+
+
+
+
+## Other situations
 
 
 
