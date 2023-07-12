@@ -74,8 +74,8 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     #this for loop will take the input fastq files and run the scripts for all of them one pair after another
     
     #change directory to where your input fastqs are stored
-    cd /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
-    
+    fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
+    cd $fastq_file_location
     
     for i in $(ls *R1*.gz)
     do
@@ -83,11 +83,16 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     echo $i
     echo $otherfilename
     
-    qsub -v fq_F=$i,fq_R=$otherfilename /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+    qsub -v input_folder=$fastq_file_location,fq_F=$i,fq_R=$otherfilename,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
           
     done
     
     ```
+    * **Important**: Within the job_submission.sh file in the last line qsub,  you have the choice of specifying whether to run macs2 peak calling step. There are three mandatory flags in the qsub command:
+        * -macs2: whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
+        * -p: p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
+        * -q: q value for macs2. If you are not running IDR (eg you just have one rep), use this adjusted p value for macs2 instead. Only specify either p or q, not both!
+          
     **run_job.sh** This is the script that performs the actual analysis for each sample. The input are fastq files, and it will output:<br>
     *the aligned and filtered bam file <br>
     *bigwig files for each individual replicate <br>
@@ -103,10 +108,6 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
 * ### Run the job
     *change directory to the scripts folder that contains your job_submission.sh and run_job.sh file, type in ``` chmod +x * ```, this give execution rights to your scripts <br>
     * type in ```./job_submission.sh``` and the job should start to run
-    * **Important**: Within the job_submission.sh file in the last line,  you have the choice of specifying whether to run macs2 peak calling step. There are three mandatory flags in the qsub command:
-        * -macs2: whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
-        * -p: p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
-        * -q: q value for macs2. If you are not running IDR (eg you just have one rep), use this adjusted p value for macs2 instead. Only specify either p or q, not both!
 
 
 * ### IDR analysis (If you chose to run macs2)
@@ -125,7 +126,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
           --plot \
           --log-output-file CD34_CUX1_CnR.idr.log
      * The output file CD34_CUX1_CnR.idr contains the consensus peaks across the two replicates. For a detailed explanantion of what columns are inside, please see [HBC training](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/07_handling-replicates-idr.html). What we care about here is column 5, which contains the scaled IDR value = -125*log2(IDR) For example, peaks with an IDR of 0.1 have a score of 415, peaks with an IDR of 0.05 have a score of int(-125log2(0.05)) = 540.
-     * Use this command to filter out peaks with IDR < 0.05 and compile to a bed file
+     * Use this command to filter out peaks with IDR < 0.05 and compile to a bed file. This is the final file that contains your consensus peaks.
        ``` awk '{if($5 >= 540) print $0}' CD34_CUX1_CnR_idr > CD34_CUX1_CnR_idr_005.bed ```
 
 
@@ -133,6 +134,39 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
 
 ## Other situations
    * ### Single end sequencing analysis
+   If you are running single end sequencing (eg.ChIP-seq), please modidy the job submission code as follows:
+   ```bash
+    
+    #!/bin/bash
+    
+    #PBS -N CD34_CUX1_CHIP
+    #PBS -S /bin/bash
+    #PBS -l walltime=24:00:00
+    #PBS -l nodes=1:ppn=8
+    #PBS -l mem=32gb
+    #PBS -o /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.out
+    #PBS -e /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.err
+    
+    date
+    module load gcc/6.2.0
+    
+    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+    
+    #change directory to where your input fastqs are stored
+    fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
+    cd $fastq_file_location
+    
+    for i in $(ls *.gz)
+    do
+    echo $i
+ 
+    qsub -v input_folder=$fastq_file_location,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+          
+    done
+    
+    ```
+    And modify the following places in the run_job.sh script
+    *
    * ### Broad peak calling
 
 
