@@ -135,6 +135,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
 ## Other situations
    * ### Single end sequencing analysis
    If you are running single end sequencing (eg.ChIP-seq), please modidy the job submission code as follows:
+   
    ```bash
     
     #!/bin/bash
@@ -166,8 +167,11 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     
     ```
     And modify the following places in the run_job.sh script
-    *
-   * ### Broad peak calling
+    1.At the start, instead of ``` echo $fq_F and $fq_R ```, just change to ``` echo $fq ```
+    2.Do the same thing in the bwa mem code
+    3.Change the ``` -f BAMPE ``` flag in macs2 to ``` -f BAM ```
+    
+    ### Broad peak calling
 
 
 
