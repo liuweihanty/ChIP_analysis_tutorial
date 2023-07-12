@@ -2,8 +2,8 @@
  - [Introduction](#introduction)
  - [Demo data](#demo_data)
  - [Analysis workflow](#analysis_workflow)
- - [Step by step analysis](#Step_by_step_analysis)
- - [Other situations](##Other_situations) 
+- [Step by step analysis](#Step_by_step_analysis)
+ - [Other situations](#Other_situations) 
     - [Single end sequencing analysis](#single_end_sequencing_analysis)
     - [Broad peak calling](#Broad_peak_calling)
   
