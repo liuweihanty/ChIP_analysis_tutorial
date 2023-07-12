@@ -127,7 +127,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
           --log-output-file CD34_CUX1_CnR.idr.log
      * The output file CD34_CUX1_CnR.idr contains the consensus peaks across the two replicates. For a detailed explanantion of what columns are inside, please see [HBC training](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/07_handling-replicates-idr.html). What we care about here is column 5, which contains the scaled IDR value = -125*log2(IDR) For example, peaks with an IDR of 0.1 have a score of 415, peaks with an IDR of 0.05 have a score of int(-125log2(0.05)) = 540.
      * Use this command to filter out peaks with IDR < 0.05 and compile to a bed file. This is the final file that contains your consensus peaks.
-       ``` awk '{if($5 >= 540) print $0}' CD34_CUX1_CnR_idr > CD34_CUX1_CnR_idr_005.bed ```
+       ``` awk '{if($5 >= 540) print $0}' CD34_CUX1_CnR_idr > CD34_CUX1_CnR_idr_005.bed ``` 
 
 
 
@@ -136,42 +136,44 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
    * ### Single end sequencing analysis
    If you are running single end sequencing (eg.ChIP-seq), please modidy the job submission code as follows:
    
-   ```bash
-    
-    #!/bin/bash
-    
-    #PBS -N CD34_CUX1_CHIP
-    #PBS -S /bin/bash
-    #PBS -l walltime=24:00:00
-    #PBS -l nodes=1:ppn=8
-    #PBS -l mem=32gb
-    #PBS -o /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.out
-    #PBS -e /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.err
-    
-    date
-    module load gcc/6.2.0
-    
-    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
-    
-    #change directory to where your input fastqs are stored
-    fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
-    cd $fastq_file_location
-    
-    for i in $(ls *.gz)
-    do
-    echo $i
- 
-    qsub -v input_folder=$fastq_file_location,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
-          
-    done
+    ```
+     #!/bin/bash
+     
+     #PBS -N CD34_CUX1_CHIP
+     #PBS -S /bin/bash
+     #PBS -l walltime=24:00:00
+     #PBS -l nodes=1:ppn=8
+     #PBS -l mem=32gb
+     #PBS -o /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.out
+     #PBS -e /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.err
+     
+     date
+     module load gcc/6.2.0
+     
+     #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+     
+     #change directory to where your input fastqs are stored
+     fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
+     cd $fastq_file_location
+     
+     for i in $(ls *.gz)
+     do
+     echo $i
+  
+     qsub -v input_folder=$fastq_file_location,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+           
+     done
     
     ```
-    And modify the following places in the run_job.sh script
-    1.At the start, instead of ``` echo $fq_F and $fq_R ```, just change to ``` echo $fq ```
-    2.Do the same thing in the bwa mem code
-    3.Change the ``` -f BAMPE ``` flag in macs2 to ``` -f BAM ```
-    
-    ### Broad peak calling
+
+   And modify the following places in the run_job.sh script <br>
+    1.At the start, instead of ``` echo $fq_F and $fq_R ```, just change to ``` echo $fq ``` <br>
+    2.Do the same thing in the bwa mem code <br>
+    3.Change the ``` -f BAMPE ``` flag in macs2 to ``` -f BAM ``` <br>
+
+
+
+   ### Broad Peak calling (under construction)
 
 
 
