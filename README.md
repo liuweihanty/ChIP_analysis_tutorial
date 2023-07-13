@@ -22,7 +22,7 @@ forward: MMcN-DA-16S-DA-3_S15_L002_R1_001.fastq.gz <br>
 reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br> 
 
 ## Analysis workflow
-![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_chart.png)
+![GitHub Logo](https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/main/figures/ChIP_CnR_workflow_charts.png)
 
 ## Step by step analysis
 * ### Run fastqc 
