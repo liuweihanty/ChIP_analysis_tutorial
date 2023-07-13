@@ -124,10 +124,15 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     * Now let's run IDR
       ```
       ##Sort your narrowPeak files by the -log10(p-value) column
-      sort -k8,8nr CD34_CUX1_CnR_rep1.narrowPeak > CD34_CUX1_CnR_rep1.sorted.narrowPeak
+      sort -k8,8nr CD34_CUX1_CnR_rep1.narrowPeak > CD34_CUX1_CnR_rep1.sorted.narrowPeak <br>
       sort -k8,8nr CD34_CUX1_CnR_rep2.narrowPeak > CD34_CUX1_CnR_rep2.sorted.narrowPeak
+
+      ##choose the top 250k peaks
+      head -n 250000 CD34_CUX1_CnR_rep1.sorted.narrowPeak > CD34_CUX1_CnR_rep1.sorted.top250k.narrowPeak <br>
+      head -n 250000 CD34_CUX1_CnR_rep2.sorted.narrowPeak > CD34_CUX1_CnR_rep2.sorted.top250k.narrowPeak <br>
+      
       ##run idr
-      idr --samples CD34_CUX1_CnR_rep1.sorted.narrowPeak CD34_CUX1_CnR_rep2.sorted.narrowPeak \
+      idr --samples CD34_CUX1_CnR_rep1.sorted.top250k.narrowPeak CD34_CUX1_CnR_rep2.sorted.top250k.narrowPeak \
           --input-file-type narrowPeak \
           --rank p.value \
           --output-file CD34_CUX1_CnR_idr \
