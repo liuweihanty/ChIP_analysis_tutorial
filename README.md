@@ -56,7 +56,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
    
     Now let's take a look inside of an example of each file and I will explain what each code chunk do: <br>
     
-    **job_submission.sh** For each sample, this script below find the forward read(R1) fastq file, and subsequently locate the reverse read(R2) file for that same sample(it can do so because the fastq file names you got from the sequencing core differ only in "R1" and "R2" part for the file name). This script essently locate the forward and reverse reads fastq files parallelly for each sample, and feed them into the "run_jobs.sh" file to run all the analysis steps. **What you need to do**: change all the directory path to your project directory.
+    **job_submission.sh** For each sample, this script below find the forward read(R1) fastq file, and subsequently locate the reverse read(R2) file for that same sample(it can do so because the fastq file names you got from the sequencing core differ only in "R1" and "R2" part for the file name). This script essently locate the forward and reverse reads fastq files parallelly for each sample, and feed them into the "run_jobs.sh" file to run all the analysis steps. **What you need to do**: change the directory path "project_dir" to your project directory.
     ```bash
     
      #!/bin/bash
