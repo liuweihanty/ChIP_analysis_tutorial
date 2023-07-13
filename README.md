@@ -42,7 +42,8 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
      * **/CD34_CUX1_CnR/input** $~~~$ trimmed fastqs
      * **/CD34_CUX1_CnR/output** $~~~$ the analysis output
      * **/CD34_CUX1_CnR/logs** $~~~$ the error and output records files for debugging
-     * **/CD34_CUX1_CnR/scripts** $~~~$ the analysis scripts
+     * **/CD34_CUX1_CnR/scripts** $~~~$ the analysis scripts <br>
+     
   Your working directory should look like this by now:
      <img src="https://github.com/liuweihanty/ChIP_analysis_tutorial/blob/7064d2d19c974fa2adacc081f888f956b49ce070/figures/working_directory_before_run.png" alt="repo_demo" width="350" height="200">
 
