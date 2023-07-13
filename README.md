@@ -173,7 +173,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
      do
      echo $i
   
-     qsub -v project_path=$project_dir,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+     qsub -v project_path=$project_dir,fq=$i,-macs2,-p 0.1 $project_dir/scripts/run_job.sh
            
      done
     
