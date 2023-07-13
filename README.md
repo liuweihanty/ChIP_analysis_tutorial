@@ -101,7 +101,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     **run_job.sh** This is the script that performs the actual analysis for each sample. The input are fastq files, and it will output:<br>
     *the aligned and filtered bam file <br>
     *bigwig files for each individual replicate <br>
-    *normalized mean bigwig file across the two replicates <br>
+    *individual bigwig files for each replicate, each sample <br>
     *MACS2 called peaks in narrowpeak format <br>
 
     **You don't need to modify anything for this script** <br>
