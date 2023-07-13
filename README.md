@@ -59,23 +59,25 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     ```bash
     
     #!/bin/bash
-    
+
     #PBS -N CD34_CUX1_CnR
     #PBS -S /bin/bash
     #PBS -l walltime=24:00:00
     #PBS -l nodes=1:ppn=8
     #PBS -l mem=32gb
-    #PBS -o /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_CnR_wrapper.out
-    #PBS -e /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_CnR_wrapper.err
+    #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
+    #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
     
     date
     module load gcc/6.2.0
     
-    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+    
     
     #change directory to where your input fastqs are stored
-    fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
-    cd $fastq_file_location
+    input_folder=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/input
+    cd $input_folder
+    
+    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
     
     for i in $(ls *R1*.gz)
     do
@@ -83,10 +85,12 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     echo $i
     echo $otherfilename
     
-    qsub -v input_folder=$fastq_file_location,fq_F=$i,fq_R=$otherfilename,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+    
+    #here you need to specify whether to perform macs2 peak calling by include the -macs2 flag or not. If you include, you need to specify either -p or -q significance threshold followed by a number. Do not specify both p and q values
+    qsub -v fq_location=$input_folder,fq_F=$i,fq_R=$otherfilename,-macs2,-p=0.1 /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/scripts/run_job.sh 
           
     done
-    
+   
     ```
     * **Important**: Within the job_submission.sh file in the last line qsub,  you have the choice of specifying whether to run macs2 peak calling step. There are three mandatory flags in the qsub command:
         * -macs2: whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
@@ -153,14 +157,14 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
      #this for loop will take the input fastq files and run the scripts for all of them one pair after another
      
      #change directory to where your input fastqs are stored
-     fastq_file_location=/gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/input/adaptor_trimmed_fastqs
-     cd $fastq_file_location
+     input_folder=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/input
+     cd $input_folder
      
      for i in $(ls *.gz)
      do
      echo $i
   
-     qsub -v input_folder=$fastq_file_location,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+     qsub -v fq_location=$input_folder,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
            
      done
     
