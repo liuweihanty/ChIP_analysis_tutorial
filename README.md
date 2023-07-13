@@ -59,38 +59,41 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     **job_submission.sh** For each sample, this script below find the forward read(R1) fastq file, and subsequently locate the reverse read(R2) file for that same sample(it can do so because the fastq file names you got from the sequencing core differ only in "R1" and "R2" part for the file name). This script essently locate the forward and reverse reads fastq files parallelly for each sample, and feed them into the "run_jobs.sh" file to run all the analysis steps. **What you need to do**: change all the directory path to your project directory.
     ```bash
     
-    #!/bin/bash
+     #!/bin/bash
+     
+     #PBS -N CD34_CUX1_CnR
+     #PBS -S /bin/bash
+     #PBS -l walltime=24:00:00
+     #PBS -l nodes=1:ppn=8
+     #PBS -l mem=32gb
+     #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
+     #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
+     
+     date
+     module load gcc/6.2.0
+     
+     
+     #specify your project directory
+     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR
+     
+     #change directory to where the fastq files are
+     cd $project_dir/input
+     
+     #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+     
+     for i in $(ls *R1*.gz)
+     do
+     otherfilename="${i/R1/R2}"
+     echo $i
+     echo $otherfilename
+     
+     
+     #here you need to specify whether to perform macs2 peak calling by include the -macs2 flag or not. If you include, you need to specify either -p or -q significance threshold followed by a number. Do not specify both p and q values
+     
+     qsub -v project_path=$project_dir,fq_F=$i,fq_R=$otherfilename,-macs2,-p=0.1 /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/scripts/run_job.sh 
+           
+     done
 
-    #PBS -N CD34_CUX1_CnR
-    #PBS -S /bin/bash
-    #PBS -l walltime=24:00:00
-    #PBS -l nodes=1:ppn=8
-    #PBS -l mem=32gb
-    #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
-    #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
-    
-    date
-    module load gcc/6.2.0
-    
-    
-    
-    #change directory to where your input fastqs are stored
-    input_folder=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/input
-    cd $input_folder
-    
-    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
-    
-    for i in $(ls *R1*.gz)
-    do
-    otherfilename="${i/R1/R2}"
-    echo $i
-    echo $otherfilename
-    
-    
-    #here you need to specify whether to perform macs2 peak calling by include the -macs2 flag or not. If you include, you need to specify either -p or -q significance threshold followed by a number. Do not specify both p and q values
-    qsub -v fq_location=$input_folder,fq_F=$i,fq_R=$otherfilename,-macs2,-p=0.1 /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/scripts/run_job.sh 
-          
-    done
    
     ```
     * **Important**: Within the job_submission.sh file in the last line qsub,  you have the choice of specifying whether to run macs2 peak calling step. There are three mandatory flags in the qsub command:
@@ -144,28 +147,29 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     ```
      #!/bin/bash
      
-     #PBS -N CD34_CUX1_CHIP
+     #PBS -N CD34_CUX1_CnR
      #PBS -S /bin/bash
      #PBS -l walltime=24:00:00
      #PBS -l nodes=1:ppn=8
      #PBS -l mem=32gb
-     #PBS -o /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.out
-     #PBS -e /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/run_ChIP_wrapper.err
+     #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
+     #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
      
      date
      module load gcc/6.2.0
      
-     #this for loop will take the input fastq files and run the scripts for all of them one pair after another
      
-     #change directory to where your input fastqs are stored
-     input_folder=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/input
-     cd $input_folder
+     #specify your project directory
+     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR
+     
+     #change directory to where the fastq files are
+     cd $project_dir/input
      
      for i in $(ls *.gz)
      do
      echo $i
   
-     qsub -v fq_location=$input_folder,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
+     qsub -v project_path=$project_dir,fq=$i,-macs2,-p 0.1 /gpfs/data/mcnerney-lab/.../CD34_CUX1_CnR/logs/scripts/run_job.sh
            
      done
     
