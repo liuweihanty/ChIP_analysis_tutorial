@@ -1,6 +1,4 @@
-<p align="center">
-  <h1>ChIP-seq/Cut & Run analysis tutorial</h1>
-</p>
+# ChIP-seq/Cut & Run analysis tutorial
 Author: Weihan Liu
 
 # Table of contents <br>
