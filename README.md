@@ -177,35 +177,30 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     ```
 
   And modify the following places in the run_job.sh script <br>
-  
-    1.At the start, instead of 
-    
-     ```
+  1.At the start, instead of 
+   ```
      fq_F=$1
      fq_R=$2
      run_macs2=$3
      p_value=$4
      project_dir=$5
-     
-     ```
+   ```
     
-    Change it to:
-    
-     ```
+  Change it to:
+   ```
      fq=$1
      run_macs2=$2
      p_value=$3
      project_dir=$4  
-     
-     ```
+   ```
     
-    2.Do the same thing in the bwa mem code. Instead of two fastqs as input $fq_F and $fq_R, just change it to one input $fq <br>
-    3.Change the ``` -f BAMPE ``` flag in macs2 to ``` -f BAM ``` <br>
+  2.Do the same thing in the bwa mem code. Instead of two fastqs as input `$fq_F $fq_R`, just change it to one input `$fq` <br>
+  3.Change the ` -f BAMPE ` flag in macs2 to ` -f BAM ` <br>
 
 
 
    * ### Broad Peak calling
-     
+   The only difference is we are using [SICER2](https://zanglab.github.io/SICER2/) instead of MACS2 for broad peak calling. Please see an demo in run_job_H3K27me3_broad_peak.sh for reference  
 
 
 
