@@ -60,46 +60,38 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     ```bash
     
      #!/bin/bash
-     
-     #PBS -N CD34_CUX1_CnR
-     #PBS -S /bin/bash
-     #PBS -l walltime=24:00:00
-     #PBS -l nodes=1:ppn=8
-     #PBS -l mem=32gb
-     #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
-     #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
-     
-     date
-     module load gcc/6.2.0
-     
-     
-     #specify your project directory
-     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR
-     
-     #change directory to where the fastq files are
-     cd $project_dir/input
-     
-     #this for loop will take the input fastq files and run the scripts for all of them one pair after another
-     
-     for i in $(ls *R1*.gz)
-     do
-     otherfilename="${i/R1/R2}"
-     echo $i
-     echo $otherfilename
-     
-     
-     #here you need to specify whether to perform macs2 peak calling by include the -macs2 flag or not. If you include, you need to specify either -p or -q significance threshold followed by a number. Do not specify both p and q values
-     
-     qsub -v project_path=$project_dir,fq_F=$i,fq_R=$otherfilename,-macs2,-p=0.1 $project_dir/scripts/run_job.sh 
-           
-     done
+     #specify your project directory,change for different analysis
+     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR 
 
-   
-    ```
-    * **Important**: Within the job_submission.sh file in the last line qsub,  you have the choice of specifying whether to run macs2 peak calling step. There are three available flags in the qsub command:
-        * -macs2: whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
-        * -p: p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
-        * -q: q value for macs2. If you are not running IDR (eg you just have one rep), use this adjusted p value for macs2 instead. Only specify either p or q, not both!
+    #change directory to where the fastq files are
+    cd $project_dir/input
+
+    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+
+    for i in $(ls *R1*.gz)
+    do
+    otherfilename="${i/R1/R2}"
+    echo $i
+    echo $otherfilename
+
+
+    #here you can specify whether to run MACS2 peak calling and the p value threshold, these two parameters will be passed along to the run_job.sh file
+    #whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
+    run_macs2=true
+    #p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
+    p_value=0.1  # Adjust as needed
+
+    sbatch --job-name=run_ChIP_wrapper --time=12:00:00 \
+           -o $project_dir/logs/run_Chip_seq.out \
+           -e $project_dir/logs/run_Chip_seq.err \
+           --partition=tier2q \
+           --nodes=1 \
+           --ntasks-per-node=8 \
+           --mem-per-cpu=10000 \
+           --wrap="sh $project_dir/scripts/run_job.sh $i $otherfilename $run_macs2 $p_value $project_dir"
+      
+   done
+   ```
           
     **run_job.sh** This is the script that performs the actual analysis for each sample. The input are fastq files, and it will output:<br>
     *the aligned and filtered bam file <br>
@@ -109,12 +101,12 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     **You don't need to modify anything for this script** <br>
 
     **Note:** <br>
-    This tutorial uses p=0.1 for MACS2 peak calling, this is because the downstream [IDR](https://github.com/nboley/idr) workflow requires a loose significance threshold. IDR find consensus peaks across two biological replicates. It's best to use IDR if you have replicates. If you just have one rep (eg for a pilot study), since you are not using IDR in this case, you can set q=0.1 etc for MACS2 for an actual robust significance threshold.<br>
+    This tutorial uses p=0.1 for MACS2 peak calling, this is because the downstream [IDR](https://github.com/nboley/idr) workflow requires a loose significance threshold. IDR find consensus peaks across two biological replicates. It's best to use IDR if you have replicates. If you just have one rep (eg for a pilot study), since you are not using IDR in this case, you can modify the code and use q value q=0.1 etc for MACS2 for a robust significance threshold.<br>
     
   
 * ### Run the job
     *change directory to the scripts folder that contains your job_submission.sh and run_job.sh file, type in ``` chmod +x * ```, this give execution rights to your scripts <br>
-    * type in ```./job_submission.sh``` and the job should start to run
+    * type in ```sbatch ./job_submission.sh``` and the job should start to run
 
 
 * ### IDR analysis (If you chose to run macs2)
@@ -149,25 +141,43 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
    If you are running single end sequencing (eg.ChIP-seq), please modidy the job submission code as follows:
    
     ```
-     #!/bin/bash
+    #!/bin/bash
+    #specify your project directory,change for different analysis
+    project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR 
+    
+    #change directory to where the fastq files are
+    cd $project_dir/input
+    
+    #this for loop will take the input fastq files and run the scripts for all of them one pair after another
+    
+    for i in $(ls *.gz)
+    do
+    echo $i
+    
+    
+    #here you can specify whether to run MACS2 peak calling and the p value threshold, these two parameters will be passed along to the run_job.sh file
+    #whether to run macs2, if you include this flag, the problem will run macs2 peak caller, if not, the program will skip macs2.
+    run_macs2=true
+    #p value for macs2. Use p value as the significant thrshold and specify it to be 0.1 if you are running IDR.
+    p_value=0.1  # Adjust as needed
+    
+    sbatch --job-name=run_ChIP_wrapper --time=12:00:00 \
+               -o $project_dir/logs/run_Chip_seq.out \
+               -e $project_dir/logs/run_Chip_seq.err \
+               --partition=tier2q \
+               --nodes=1 \
+               --ntasks-per-node=8 \
+               --mem-per-cpu=10000 \
+               --wrap="sh $project_dir/scripts/run_job.sh $i $run_macs2 $p_value $project_dir"
+
+
+      
+   done
+
+
+
      
-     #PBS -N CD34_CUX1_CnR
-     #PBS -S /bin/bash
-     #PBS -l walltime=24:00:00
-     #PBS -l nodes=1:ppn=8
-     #PBS -l mem=32gb
-     #PBS -o /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.out
-     #PBS -e /gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR/logs/run_CnR_wrapper.err
      
-     date
-     module load gcc/6.2.0
-     
-     
-     #specify your project directory
-     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR
-     
-     #change directory to where the fastq files are
-     cd $project_dir/input
      
      for i in $(ls *.gz)
      do
