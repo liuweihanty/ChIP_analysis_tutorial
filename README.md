@@ -59,9 +59,9 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
     **job_submission.sh** For each sample, this script below find the forward read(R1) fastq file, and subsequently locate the reverse read(R2) file for that same sample(it can do so because the fastq file names you got from the sequencing core differ only in "R1" and "R2" part for the file name). This script essently locate the forward and reverse reads fastq files parallelly for each sample, and feed them into the "run_jobs.sh" file to run all the analysis steps. **What you need to do**: change the directory path "project_dir" to your project directory.
     ```bash
     
-     #!/bin/bash
-     #specify your project directory,change for different analysis
-     project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR 
+    #!/bin/bash
+    #specify your project directory,change for different analysis
+    project_dir=/gpfs/data/mcnerney-lab/NGS_analysis_tutorials/ChIP_seq/CD34_CUX1_CnR 
 
     #change directory to where the fastq files are
     cd $project_dir/input
@@ -172,31 +172,40 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
 
 
       
-   done
-
-
-
-     
-     
-     
-     for i in $(ls *.gz)
-     do
-     echo $i
-  
-     qsub -v project_path=$project_dir,fq=$i,-macs2,-p 0.1 $project_dir/scripts/run_job.sh
-           
-     done
+    done
     
     ```
 
-   And modify the following places in the run_job.sh script <br>
-    1.At the start, instead of ``` echo $fq_F and $fq_R ```, just change to ``` echo $fq ``` <br>
-    2.Do the same thing in the bwa mem code <br>
+  And modify the following places in the run_job.sh script <br>
+  
+    1.At the start, instead of 
+    
+     ```
+     fq_F=$1
+     fq_R=$2
+     run_macs2=$3
+     p_value=$4
+     project_dir=$5
+     
+     ```
+    
+    Change it to:
+    
+     ```
+     fq=$1
+     run_macs2=$2
+     p_value=$3
+     project_dir=$4  
+     
+     ```
+    
+    2.Do the same thing in the bwa mem code. Instead of two fastqs as input $fq_F and $fq_R, just change it to one input $fq <br>
     3.Change the ``` -f BAMPE ``` flag in macs2 to ``` -f BAM ``` <br>
 
 
 
-   * ### Broad Peak calling (under construction)
+   * ### Broad Peak calling
+     
 
 
 
