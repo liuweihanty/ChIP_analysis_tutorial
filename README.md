@@ -200,7 +200,7 @@ reverse: MMcN-DA-16S-DA-3_S15_L002_R2_001.fastq.gz <br>
 
 
    * ### Broad Peak calling
-   The only difference is we are using [SICER2](https://zanglab.github.io/SICER2/) instead of MACS2 for broad peak calling. Please see an demo in run_job_H3K27me3_broad_peak.sh for reference  
+   The only difference is we are using [SICER2](https://zanglab.github.io/SICER2/) instead of MACS2 for broad peak calling. Please see an demo in run_job_H3K27me3_broad_peak.sh attached in this repo for reference  
 
 
 
